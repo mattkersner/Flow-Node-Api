@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "DEBUG=\"flow-api:*\" node build/index.js",
+    "test": "jest"
+  },
   "dependencies": {
     "babel-plugin-transform-flow-strip-types": "6.21.0",
     "babel-polyfill": "6.20.0",
@@ -16,6 +20,12 @@
     "morgan": "1.7.0"
   },
   "devDependencies": {
-    "gulp-flowtype": "1.0.0"
+    "gulp-flowtype": "1.0.0",
+    "jest": "18.0.0",
+    "supertest": "2.0.1",
+    "supertest-as-promised": "4.0.2"
+  },
+  "jest": {
+  "transform": {".*": "<rootDir>/node_modules/babel-jest"}
   }
 }
