@@ -2,6 +2,8 @@
 
 import inventory from '../../data/produce';
 import { Router }  from 'express';
+import saveInventory, {genId} from '../util/save';
+import { parseProduce, parseUpdate, parseId } from '../util/parsers';
 
 export default class ProduceRouter {
   // these fields must be type annotated, or Flow will complain!
@@ -44,10 +46,77 @@ export default class ProduceRouter {
   }
 
   /**
+   * Add a new item to the inventory
+   */
+   postOne(req: $Request, res: $Response): void {
+    const received: Produce | boolean = parseProduce(req.body);
+    const newProduce = (received) ? req.body : null;
+    if (received) {
+      newProduce.id = genId(received, inventory);
+      inventory.push(newProduce);
+      res.status(200).json({
+        status: 200,
+        message: 'Success!',
+        item: newProduce
+      });
+      //write updated inventory to the file
+      saveInventory(inventory)
+      .then((writePath) => {
+        logger(`Inventory updated. Written to:\n\t${path.relative(path.join(__dirname, '..', '..'), writePath)}`);
+      })
+      .catch((err) => {
+        logger('Error writing to inventory file.');
+        logger(err.stack);
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: 'Bad Request. Make sure that you submit an item with a name, quantity, and price.'
+      });
+      logger('Malformed POST to /produce.');
+    }
+   }
+
+   /**
+   * Update a produce item by id
+   */
+   updateOneById(req: $Request, res: $Response): void {
+    const searchId: number | boolean = parseId(req.params);
+    const payload: any = parseUpdate(req.body);
+    let toUpdate: Produce = inventory.find(item => item.id === searchId);
+    if (toUpdate && payload) {
+      Object.keys(payload).forEach((key) => {
+        if (key === 'quantity' || key === 'price') toUpdate[key] = Number(payload[key]);
+        else toUpdate[key] = payload[key];
+      });
+      res.json({
+        status: res.status,
+        message: 'Success!',
+        item: toUpdate
+      });
+      saveInventory(inventory)
+      .then((writePath) => {
+        logger(`Item updated. Inventory written to:\n\t${path.relative(path.join(__dirname, '..', '..'), writePath)}`);
+      })
+      .catch((err) => {
+        logger('Error writing to inventory file.');
+        logger(err.stack);
+      });
+    } else {
+      res.status(400).json({
+        status: res.status,
+        message: 'Update failed. Make sure the item ID and submitted fields are correct.'
+      });
+    }
+   }
+
+  /**
    * Attach route handlers to their endpoints.
    */
   init(): void {
     this.router.get('/', this.getAll);
     this.router.get('/:id', this.getById);
+    this.router.post('/', this.postOne);
+    this.router.put('/:id', this.updateOneById);
   }
 }
