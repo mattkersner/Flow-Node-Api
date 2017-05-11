@@ -1,26 +1,32 @@
 [
-  {
-    "id": 1,
-    "name": "banana",
-    "quantity": 15,
-    "price": 1
-  },
-  {
-    "id": 2,
-    "name": "cabbage",
-    "quantity": 8,
-    "price": 3
-  },
-  {
-    "id": 3,
-    "name": "apple",
-    "quantity": 30,
-    "price": 2
-  },
-  {
-    "id": 4,
-    "name": "kiwi",
-    "quantity": 20,
-    "price": 4
-  }
+	{
+		"id": 1,
+		"name": "banana",
+		"quantity": 22,
+		"price": 1
+	},
+	{
+		"id": 2,
+		"name": "cabbage",
+		"quantity": 8,
+		"price": 3
+	},
+	{
+		"id": 3,
+		"name": "apple",
+		"quantity": 30,
+		"price": 2
+	},
+	{
+		"name": "peach",
+		"quantity": 10,
+		"price": 2,
+		"id": 4
+	},
+	{
+		"name": "cheese-its",
+		"quantity": 7,
+		"price": 5,
+		"id": 5
+	}
 ]

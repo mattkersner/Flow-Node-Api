@@ -18,6 +18,10 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
+var _ProduceRouter = require('./routers/ProduceRouter');
+
+var _ProduceRouter2 = _interopRequireDefault(_ProduceRouter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52,17 +56,14 @@ var Api = function () {
     }
 
     // connect resource routers
-    // Api.routes - Right now, it attaches a single route handler that returns some JSON.
-    // However, notice the Flow annotations on the parameters of the anonymous function. These correspond
-    // to the base arguments for an Express route handler: $Request and $Response. These refer to Express'
-    // extended versions of Node’s IncomingMessage and ServerResponse objects, respectively.
 
   }, {
     key: 'routes',
     value: function routes() {
-      this.express.use(function (req, res) {
-        res.json({ message: 'Hello Flow!' });
-      });
+      // create an instance of ProduceRouter
+      var produceRouter = new _ProduceRouter2.default();
+      // attach it to our express app
+      this.express.use(produceRouter.path, produceRouter.router);
     }
   }]);
 
